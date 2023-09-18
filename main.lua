@@ -135,6 +135,7 @@ end
     changes we make will be applied as fast as possible and will vary
     across system hardware.
 ]]
+
 function love.update(dt)
     if gameState == 'serve' then
         -- before switching to play, initialize ball's velocity based
@@ -146,6 +147,14 @@ function love.update(dt)
             ball.dx = -math.random(140, 200)
         end
     elseif gameState == 'play' then
+         local ai = player2.y + player2.height / 2
+        if ai < ball.y then
+            player2.dy = PADDLE_SPEED
+        elseif ai > ball.y then
+            player2.dy = -PADDLE_SPEED
+        else
+            player2.dy = 0
+        end
         -- detect ball collision with paddles, reversing dx if true and
         -- slightly increasing it, then altering the dy based on the position
         -- at which it collided, then playing a sound effect
@@ -235,15 +244,6 @@ function love.update(dt)
         player1.dy = PADDLE_SPEED
     else
         player1.dy = 0
-    end
-
-    -- player 2
-    if love.keyboard.isDown('up') then
-        player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        player2.dy = PADDLE_SPEED
-    else
-        player2.dy = 0
     end
 
     -- update our ball based on its DX and DY only if we're in play state;
